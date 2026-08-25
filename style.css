@@ -44,7 +44,35 @@ h1{
     /* justify-content: center; */
     align-items: center;
     border-radius: 5px;
+    position: relative;
 }
 #search-box:focus-within{
     border-color: white;
+}
+#options{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 120px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background-color: #181818;
+    color: white;
+    z-index: 10;
+}
+.suggestion-item{
+    display: block;
+    padding: 5px 8px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+    line-height: 1.2;
+}
+.suggestion-item:hover{
+    background-color: #333333;
 }

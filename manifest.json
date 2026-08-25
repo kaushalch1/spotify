@@ -6,6 +6,11 @@
     "action":{
         "default_popup":"index.html",
         "default_title":"Create_Extension"
+    },
+    "host_permissions": [
+        "http://localhost:3000/*"
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'; frame-src https://www.youtube.com;"
     }
-    
 }
