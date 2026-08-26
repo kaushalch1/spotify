@@ -15,14 +15,12 @@ searchsong.addEventListener("keydown", async(event) => {
                     <p class="song">${item.snippet.title}</p><br>
                 </div>`;
                 option.addEventListener("click",()=>{
+                    const videoid = item.id.videoId;
                     document.getElementById("player").innerHTML = `
-                        <iframe
-                            width="10"
-                            height="20"
-                            src="https://www.youtube.com/embed/${item.id.videoId}?autoplay=1"
-                            allow="autoplay; encrypted-media"
-                            allowfullscreen>
-                        </iframe>
+                        <audio id="audio-player" controls autoplay style="width: 100%;">
+                            <source src="http://localhost:3000/api/playsong?v=${videoid}">
+                            Your browser does not support the audio element.
+                        </audio>
                     `;
                 });
                 document.getElementById("options").appendChild(option);

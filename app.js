@@ -4,8 +4,11 @@ const http = require("http");
 const fs=require("fs");
 const path= require("path");
 const {Server} =require("socket.io");
+const cors=require('cors');
+const youtubedl = require('youtube-dl-exec');
 
 let app=express();
+app.use(cors());
 let server=http.createServer(app);
 const io=new Server(server);
 const rootDir=__dirname;
@@ -16,9 +19,8 @@ if (fs.existsSync(distDir)) {
 
 app.use(express.static(rootDir));
 
-
 app.get('/api/song',async(req,res)=>{
-   const query = String(req.query.q || "").trim();
+    const query = String((req.query.q||"")+" song").trim();
     const apiKey = process.env.apiKey;
     if (!query) {
         return res.status(400).json({error: "A search query is required"});
@@ -38,13 +40,36 @@ app.get('/api/song',async(req,res)=>{
                 details
             });
         }
-
         const data = await response.json();
         res.json(data.items || []);
-
+        
     }catch(error){
         console.error("Failed to fetch songs:", error);
         res.status(500).json({error:'Failed to fetch details'});
+    }
+});
+app.get('/api/playsong',async(req,res)=>{
+    const videoId = String(req.query.v || "").trim();
+    if (!videoId) {
+        return res.status(400).json({ error: 'A video id is required' });
+    }
+    try{
+        const videourl= `https://www.youtube.com/watch?v=${videoId}`;
+        const info = await youtubedl(videourl, {
+            dumpSingleJson: true,
+            noWarnings: true,
+            format: 'bestaudio'
+        });
+        const audiourl=info.url;
+        if(!audiourl){
+            return res.status(404).json({ error: 'No audio stream found for this video'});
+        }
+        const audioResponse = await fetch(audiourl);
+        res.setHeader('Content-Type', audioResponse.headers.get('content-type') || 'audio/webm');
+        audioResponse.body.pipe ? audioResponse.body.pipe(res) : require('stream').Readable.fromWeb(audioResponse.body).pipe(res);
+    }catch(error){
+        console.error('Failed to stream audio:',error);
+        res.status(500).json({error:'Failed to play the audio'});
     }
 });
 app.use((req, res) => {
@@ -53,5 +78,6 @@ app.use((req, res) => {
         : path.join(rootDir, "index.html");
     res.sendFile(indexFile);
 });
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, ()=> console.log(`Server is running on PORT:${PORT}`));
