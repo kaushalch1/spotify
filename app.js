@@ -1,3 +1,6 @@
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/dist/styles.css';
+
 require("dotenv").config();
 const express = require("express");
 const http = require("http");
@@ -16,7 +19,6 @@ const distDir=path.join(rootDir,"dist");
 if (fs.existsSync(distDir)) {
     app.use(express.static(distDir));
 }
-
 app.use(express.static(rootDir));
 
 app.get('/api/song',async(req,res)=>{
@@ -65,8 +67,8 @@ app.get('/api/playsong',async(req,res)=>{
             return res.status(404).json({ error: 'No audio stream found for this video'});
         }
         const audioResponse = await fetch(audiourl);
-        res.setHeader('Content-Type', audioResponse.headers.get('content-type') || 'audio/webm');
-        audioResponse.body.pipe ? audioResponse.body.pipe(res) : require('stream').Readable.fromWeb(audioResponse.body).pipe(res);
+        res.setHeader('Content-Type',audioResponse.headers.get('content-type') || 'audio/webm');
+        audioResponse.body.pipe ?audioResponse.body.pipe(res):require('stream').Readable.fromWeb(audioResponse.body).pipe(res);
     }catch(error){
         console.error('Failed to stream audio:',error);
         res.status(500).json({error:'Failed to play the audio'});
