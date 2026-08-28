@@ -1,6 +1,3 @@
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/dist/styles.css';
-
 require("dotenv").config();
 const express = require("express");
 const http = require("http");

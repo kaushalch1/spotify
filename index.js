@@ -17,7 +17,6 @@ searchsong.addEventListener("keydown", async(event) => {
                 </div>`;
                 option.addEventListener("click",()=>{
                     const videoid = item.id.videoId;
-                    const 
                     document.getElementById("player").innerHTML = `
                         <audio id="audio-player" controls autoplay style="width: 100%;">
                             <source src="http://localhost:3000/api/playsong?v=${videoid}">

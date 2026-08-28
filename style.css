@@ -9,7 +9,7 @@ body{
     padding-left: 10px;
 }
 h1{
-    color: rgb(99, 230, 190);
+    color: #1ed760;
 }
 #search{
     border-radius: 5px;
@@ -22,7 +22,7 @@ h1{
     outline:none;
 }
 .search-icon{
-    color: rgb(99, 230, 190);
+    color: #1ed760;
 }
 .search{
     position: absolute;
@@ -77,34 +77,60 @@ h1{
     background-color: #333333;
 }
 
-/* audio{
+audio{
     width: 100%;
-    max-width: 400px;
-    height: 50px;
-    border-radius: 100px;
-    background-color: #181818;
+    max-width: 480px;
+    height: 54px;
+    border-radius: 9999px;
+    background-color: #121413;
+    border: 1px solid rgba(29,185,84,0.45);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.8);
     outline: none;
-    accent-color: #1DB954;
+    transition: border-color 0.2s ease,border-shadow 0.2s ease;
+}
+audio:hover{
+    border-color: rgba(29,185,84,0.75);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.9),0 0 15px rgba(29,185,84,0.2);
 }
 audio::-webkit-media-controls-panel {
-  background-color: #181818;
-  border-radius: 500px;
-  color: white;
+  background-color: #121413;
+  color: #ffffff;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  border-radius: 9999px;
 }
 audio::-webkit-media-controls-play-button{
-    background-color: #1DB954;
+    background-color: #1ED760;
+    cursor:pointer;
     border-radius:50%;
-    /* filter: invert(0) brightness(1); */
+    margin-right: 12px;
+    transform: scale(1.18);
+    transition: transform 0.15s ease,backgrond-color 0.15s ease;
+    filter: brightness(1);
+}
+audio::-webkit-media-controls-play-button:hover{
+    background-color: #1ed760;
+    transform: scale(1.26);
 }
 audio::-webkit-media-controls-current-time-display,audio::-webkit-media-controls-time-remaining-display{
     color: white;
     font-size: 15px;
 }
 audio::-webkit-media-controls-volume-slider{
-    color: #404040;
-    border-radius: 5px;
+    cursor:pointer;
+    accent-color: #ffffff;
 }
-audio::-webkit-media-controls-mute-button,audio::-webkit-media-controls-overflow-button{
-    color: #1DB954;
+
+audio::-webkit-media-controls-timeline{
+    cursor:pointer;
+    accent-color: #ffffff;
+    margin: 0 10px;
+    height:5px
+}
+audio::-webkit-media-controls-mute-button, audio::-webkit-media-controls-overflow-button{
+    filter: invert(1) brightness(1.25);
+    cursor:pointer;
+    margin-left: 6px;
     border: none;
-} */
+}
