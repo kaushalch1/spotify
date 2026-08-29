@@ -1,7 +1,13 @@
 const searchsong = document.getElementById("search");
+import {io} from 'socket.io-client';
 const results = document.getElementById("results");
 
-
+let roombtn=document.getElementById('roombtn');
+let popup=document.getElementById('mypopup').parentElement; // Get the popup container
+roombtn.addEventListener('click',()=>{
+    popup.classList.toggle('show');
+    //socket.emit("active users");
+});
 searchsong.addEventListener("keydown", async(event) => {
     if (event.key === "Enter" && searchsong.value.trim()){
         let x=await fetch(`http://localhost:3000/api/song?q=${encodeURIComponent(searchsong.value)}`);
@@ -17,6 +23,7 @@ searchsong.addEventListener("keydown", async(event) => {
                 </div>`;
                 option.addEventListener("click",()=>{
                     const videoid = item.id.videoId;
+                    //socket emit code here
                     document.getElementById("player").innerHTML = `
                         <audio id="audio-player" controls autoplay style="width: 100%;">
                             <source src="http://localhost:3000/api/playsong?v=${videoid}">

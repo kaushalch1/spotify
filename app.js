@@ -16,6 +16,13 @@ const distDir=path.join(rootDir,"dist");
 if (fs.existsSync(distDir)) {
     app.use(express.static(distDir));
 }
+
+const roomshistory={},rooms={};
+io.on("connection",(socket)=>{
+    let currom=null;
+    console.log("conected",socket.id);
+    
+});
 app.use(express.static(rootDir));
 
 app.get('/api/song',async(req,res)=>{

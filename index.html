@@ -9,6 +9,16 @@
 </head>
 <body>
     <h1>Spokify</h1>
+    <button class="buttons" title="join room" id="roombtn"></button>
+    <div class="popup-container">
+        <div id="mypopup" class="popup-box">
+            <span id="room-id">Room Id:</span><br>
+            <input type="text" style="width: 150px;" placeholder="Enter the room id:" id="room_id" title="room id"></input>
+            <button id="join">Join</button>
+            <p id="user_num">Users Online:</p>
+            <p id="users"></p>
+        </div>
+    </div>
     <p>Play music with your friends and enjoy ad free music</p>
     <div id="search-box">
         <i class="fa fa-search search-icon" aria-hidden="true" style="padding-right: 15px;"></i>
@@ -17,7 +27,19 @@
     </div>
     <div id="results" aria-live="polite"></div>
     <div id="player" style="padding-top: 50%;"></div>
-    <script type="module" src="./index.js"></script>
     <!--<audio controls autoplay style="width: 100%"> </audio>-->
+    <script type="module" src="./index.js"></script>
+    <script>
+        let joinbtn=document.getElementById("join");
+        let roomspan=document.getElementById("room-id");
+        joinbtn.addEventListener("click",()=>{
+        const roomname=document.getElementById("room_id").value.trim();
+        if(roomname){
+                
+            }else{
+
+            }
+        });
+    </script>
 </body>
 </html>
