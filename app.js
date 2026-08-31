@@ -21,7 +21,25 @@ const roomshistory={},rooms={};
 io.on("connection",(socket)=>{
     let currom=null;
     console.log("conected",socket.id);
-    
+    socket.on("song play",(x1,y1)=>{
+        //
+    });
+    socket.on("join room",(room_name)=>{
+        console.log("Join room:",room_name);
+        if(currom){
+            socket.leave(currom);
+        }
+        socket.join(room_name);
+        currom=room_name;
+        if(!roomshistory[room_name]){
+            roomshistory[room_name]=[];
+            rooms[room_name] =[];
+        }
+        rooms[room_name].push(socket.id);
+        socket.emit("room history",roomshistory[room_name]);
+        io.to(room_name).emit("active users",rooms[room_name]);
+        console.log(`User ${socket.id} joined room: ${room_name}`)
+    });
 });
 app.use(express.static(rootDir));
 

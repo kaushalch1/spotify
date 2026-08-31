@@ -1,12 +1,18 @@
 const searchsong = document.getElementById("search");
-import {io} from 'socket.io-client';
+//import {io} from 'socket.io-client';
 const results = document.getElementById("results");
 
 let roombtn=document.getElementById('roombtn');
-let popup=document.getElementById('mypopup').parentElement; // Get the popup container
+let ispop=false,popup=document.getElementById('mypopup');
 roombtn.addEventListener('click',()=>{
-    popup.classList.toggle('show');
-    //socket.emit("active users");
+    if(!ispop){
+        popup.style.display='block';
+        ispop=true;
+        //socket.emit("active users");
+    }else{
+        popup.style.display='none';
+        ispop=false;
+    }
 });
 searchsong.addEventListener("keydown", async(event) => {
     if (event.key === "Enter" && searchsong.value.trim()){
