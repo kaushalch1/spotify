@@ -23,6 +23,7 @@ io.on("connection",(socket)=>{
     console.log("conected",socket.id);
     socket.on("play song",(x1,y1)=>{
         if(curroom){
+            roomshistory[curroom] = { x1, y1 };
             socket.to(curroom).emit("play song",{x1,y1});
             socket.emit("play song",{x1,y1});
         }
@@ -35,8 +36,14 @@ io.on("connection",(socket)=>{
         socket.join(room_name);
         curroom=room_name;
         if(!roomshistory[room_name]){
-            roomshistory[room_name]=[];
+            roomshistory[room_name]={x1:null,y1:0};
             rooms[room_name] =[];
+        }
+        if (roomshistory[room_name].x1) {
+            socket.emit("play song", {
+                x1: roomshistory[room_name].x1,
+                y1: roomshistory[room_name].y1
+            });
         }
         rooms[room_name].push(socket.id);
         socket.emit("room history",roomshistory[room_name]);

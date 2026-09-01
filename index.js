@@ -32,7 +32,7 @@ socket.on("play song",(data)=>{
     isplay =true;
     console.log(data.x1,data.y1,data);
     audio(data.x1,data.y1);
-    isplay= false;
+    //isplay= false;
 });
 
 async function audio(videoid,time){
@@ -45,16 +45,25 @@ async function audio(videoid,time){
         `;
         currsong=videoid;
         const audioPlayer = document.getElementById("audio-player");
+        if(time>0) {
+            audioPlayer.currentTime =time;
+        }
         if(!isplay){
             socket.emit("play song",videoid,audioPlayer.currentTime);
+        }else{
+            isplay=false;
         }
-        audioPlayer.addEventListener("seeked", () => {
-            if(isplay) return;
+        audioPlayer.addEventListener("seeking", () => {
+            if(isplay){
+                isplay=false;
+                return;
+            }
             console.log("User skipped to:", audioPlayer.currentTime);
             socket.emit("play song", videoid, audioPlayer.currentTime);
         });
     }else{
         const audioPlayer =document.getElementById("audio-player");
+        isplay=true;
         audioPlayer.currentTime=time;
     }
 }
@@ -73,6 +82,7 @@ searchsong.addEventListener("keydown", async(event) => {
                 </div>`;
                 option.addEventListener("click",()=>{
                     const videoid = item.id.videoId;
+                    isplay=false;
                     audio(videoid);
                 });
                 document.getElementById("options").appendChild(option);
