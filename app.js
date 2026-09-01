@@ -23,7 +23,8 @@ io.on("connection",(socket)=>{
     console.log("conected",socket.id);
     socket.on("play song",(x1,y1)=>{
         if(curroom){
-            socket.to(curroom).emit("play song",x1,y1);
+            socket.to(curroom).emit("play song",{x1,y1});
+            socket.emit("play song",{x1,y1});
         }
     });
     socket.on("join room",(room_name)=>{

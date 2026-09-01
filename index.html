@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify</title>
+    <title>Spokify</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -28,23 +28,7 @@
     <div id="results" aria-live="polite"></div>
     <div id="player" style="padding-top: 50%;"></div>
     <!--<audio controls autoplay style="width: 100%"> </audio>-->
-    <script type="module" src="./index.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        let joinbtn=document.getElementById("join");
-        let roomspan=document.getElementById("room-id");
-        joinbtn.addEventListener("click",()=>{
-            const roomname=document.getElementById("room_id").value.trim();
-            if(roomname){
-                roomspan.innerText ="Room Id: " + roomname;
-            }else{
-                roomspan.innerText ="Room Id:";
-            }
-            if(roomname){
-                socket.emit("join room",roomname);
-            }
-        });
-    </script>
+    <script type="module" src="./index.js"></script>
 </body>
 </html>
