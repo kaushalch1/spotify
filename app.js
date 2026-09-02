@@ -42,7 +42,7 @@ io.on("connection",(socket)=>{
         if (roomshistory[room_name].x1) {
             socket.emit("play song", {
                 x1: roomshistory[room_name].x1,
-                y1: roomshistory[room_name].y1
+                y1: roomshistory[room_name].y1+3
             });
         }
         rooms[room_name].push(socket.id);

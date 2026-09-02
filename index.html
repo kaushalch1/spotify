@@ -25,10 +25,29 @@
         <input type="search" id="search" placeholder="Search songs.."></input>
         <div id="options"></div>
     </div>
+    <div id="home-cont">
+        <section class="quick-picks" aria-label="quick-picks">
+            <div class="section-head">
+                <h3 id="quick-picks-title">Quick picks</h3>
+                <span>Tap to search</span>
+            </div>
+            <div class="pick-list">
+                <button class="pick" data-query="lofi beats">Lofi beats</button>
+                <button class="pick" data-query="top pop hits">Top pop hits</button>
+                <button class="pick" data-query="chill music">Chill music</button>
+                <button class="pick" data-query="workout music">Workout music</button>
+            </div>
+        </section>
+        <section class="steps" aria-label="How to use spokify">
+            <div><strong>01</strong><span>Search<br>for music</span></div>
+            <div><strong>02</strong><span>Join<br>a room</span></div>
+            <div><strong>03</strong><span>Listen<br>together</span></div>
+        </section>
+    </div>
     <div id="results" aria-live="polite"></div>
     <div id="player" style="padding-top: 50%;"></div>
     <!--<audio controls autoplay style="width: 100%"> </audio>-->
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="socket.io.min.js"></script>
     <script type="module" src="./index.js"></script>
 </body>
 </html>

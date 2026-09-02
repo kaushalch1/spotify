@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("http://localhost:3000");
 const searchsong = document.getElementById("search");
 const results = document.getElementById("results");
 const joinbtn = document.getElementById("join");
@@ -8,6 +8,8 @@ joinbtn.addEventListener("click",()=>{
     if(roomname){
         roomspan.innerText = "Room Id: " + roomname;
         socket.emit("join room", roomname);
+        popup.style.display='none';
+        ispop=false;
     }else{
         roomspan.innerText = "Room Id:";
     }
@@ -25,16 +27,23 @@ roombtn.addEventListener('click',()=>{
         ispop=false;
     }
 });
-let currsong;
+let quickpick=document.querySelectorAll(".pick");
+quickpick.forEach((button) => {
+    button.addEventListener("click", () => {
+        searchsong.value = button.dataset.query;
+        searchsong.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter"}));
+    });
+});
 
+let currsong;
 let isplay =false;
+
 socket.on("play song",(data)=>{
     isplay =true;
     console.log(data.x1,data.y1,data);
     audio(data.x1,data.y1);
     //isplay= false;
 });
-
 async function audio(videoid,time){
     if(videoid!==currsong){
         document.getElementById("player").innerHTML = `
@@ -84,6 +93,7 @@ searchsong.addEventListener("keydown", async(event) => {
                     const videoid = item.id.videoId;
                     isplay=false;
                     audio(videoid);
+                    document.getElementById("options").replaceChildren();
                 });
                 document.getElementById("options").appendChild(option);
                 i--;
