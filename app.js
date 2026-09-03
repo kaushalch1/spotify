@@ -28,6 +28,12 @@ io.on("connection",(socket)=>{
             socket.emit("play song",{x1,y1});
         }
     });
+    socket.on("pause song",(x1,y1)=>{
+        if(curroom){
+            roomshistory[curroom] = { x1, y1 };
+            socket.to(curroom).emit("pause song",{x1,y1});
+        }
+    });
     socket.on("join room",(room_name)=>{
         console.log("Join room:",room_name);
         if(curroom){

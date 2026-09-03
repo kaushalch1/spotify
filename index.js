@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000");
+//const socket = io("http://localhost:3000");
 const searchsong = document.getElementById("search");
 const results = document.getElementById("results");
 const joinbtn = document.getElementById("join");
@@ -7,7 +7,8 @@ joinbtn.addEventListener("click",()=>{
     const roomname = document.getElementById("room_id").value.trim();
     if(roomname){
         roomspan.innerText = "Room Id: " + roomname;
-        socket.emit("join room", roomname);
+        // socket.emit("join room", roomname);
+        chrome.runtime.sendMessage({target:"offscreen",type:"JOIN_ROOM",room: roomname});
         popup.style.display='none';
         ispop=false;
     }else{
@@ -35,47 +36,72 @@ quickpick.forEach((button) => {
     });
 });
 
-let currsong;
-let isplay =false;
+// let currsong;
+// let isplay =false;
 
-socket.on("play song",(data)=>{
-    isplay =true;
-    console.log(data.x1,data.y1,data);
-    audio(data.x1,data.y1);
-    //isplay= false;
-});
-async function audio(videoid,time){
-    if(videoid!==currsong){
-        document.getElementById("player").innerHTML = `
-            <audio id="audio-player" controls autoplay style="width: 100%;">
-            <source src="http://localhost:3000/api/playsong?v=${videoid}">
-            Your browser does not support the audio element.
-            </audio>
-        `;
-        currsong=videoid;
-        const audioPlayer = document.getElementById("audio-player");
-        if(time>0) {
-            audioPlayer.currentTime =time;
-        }
-        if(!isplay){
-            socket.emit("play song",videoid,audioPlayer.currentTime);
-        }else{
-            isplay=false;
-        }
-        audioPlayer.addEventListener("seeking", () => {
-            if(isplay){
-                isplay=false;
-                return;
-            }
-            console.log("User skipped to:", audioPlayer.currentTime);
-            socket.emit("play song", videoid, audioPlayer.currentTime);
-        });
-    }else{
-        const audioPlayer =document.getElementById("audio-player");
-        isplay=true;
-        audioPlayer.currentTime=time;
-    }
-}
+// socket.on("play song",(data)=>{
+//     isplay =true;
+//     console.log(data.x1,data.y1,data);
+//     audio(data.x1,data.y1);
+//     //isplay= false;
+// });
+
+// socket.on("pause song",(data)=>{
+//     isplay=true;
+//     const audioPlayer = document.getElementById("audio-player");
+//     if(audioPlayer){
+//         audioPlayer.pause();
+//     }
+// })
+// async function audio(videoid,time){
+//     if(videoid!==currsong){
+//         document.getElementById("player").innerHTML = `
+//             <audio id="audio-player" controls autoplay style="width: 100%;">
+//             <source src="http://localhost:3000/api/playsong?v=${videoid}">
+//             Your browser does not support the audio element.
+//             </audio>
+//         `;
+//         currsong=videoid;
+//         const audioPlayer = document.getElementById("audio-player");
+//         if(time>0){
+//             audioPlayer.currentTime =time;
+//         }
+//         audioPlayer.addEventListener("play", () => {
+//             if(isplay){
+//                 isplay=false;
+//                 return;
+//             }
+//             socket.emit("play song", videoid, audioPlayer.currentTime);
+//         });
+//         audioPlayer.addEventListener("pause",()=>{
+//             if(isplay){
+//                 isplay=false;
+//                 return;
+//             }
+//             socket.emit("pause song",videoid,audioPlayer.currentTime);
+//         });
+//         // if(!isplay){
+//         //     socket.emit("play song",videoid,audioPlayer.currentTime);
+//         // }else{
+//         //     isplay=false;
+//         // }
+//         audioPlayer.addEventListener("seeking", () => {
+//             if(isplay){
+//                 isplay=false;
+//                 return;
+//             }
+//             console.log("User skipped to:", audioPlayer.currentTime);
+//             socket.emit("play song", videoid, audioPlayer.currentTime);
+//         });
+//     }else{
+//         const audioPlayer =document.getElementById("audio-player");
+//         isplay=true;
+//         audioPlayer.currentTime=time;
+//         if(audioPlayer.paused){
+//             audioPlayer.play();
+//         }
+//     }
+// }
 searchsong.addEventListener("keydown", async(event) => {
     if (event.key === "Enter" && searchsong.value.trim()){
         let x=await fetch(`http://localhost:3000/api/song?q=${encodeURIComponent(searchsong.value)}`);
@@ -91,8 +117,9 @@ searchsong.addEventListener("keydown", async(event) => {
                 </div>`;
                 option.addEventListener("click",()=>{
                     const videoid = item.id.videoId;
-                    isplay=false;
-                    audio(videoid);
+                    //isplay=false;
+                    //audio(videoid);
+                     chrome.runtime.sendMessage({target:"offscreen", type:"PLAY_SONG", videoId: videoid});
                     document.getElementById("options").replaceChildren();
                 });
                 document.getElementById("options").appendChild(option);
@@ -100,4 +127,4 @@ searchsong.addEventListener("keydown", async(event) => {
             }
         });
     }
-});
+})
