@@ -12,6 +12,15 @@ socket.on("pause song",(data)=>{
         audioplayer.pause();
     }
 });
+function brodcaststate(){
+    chrome.runtime.sendMessage({
+        type:"STATE_UPDATE",
+        videoId: currsong,
+        paused: audioplayer.paused,
+        currentTime: audioplayer.currentTime,
+        duration: audioplayer.duration || 0
+    }).catch(()=>{});
+}
 async function audio(videoid,time){
     if(videoid!=currsong){
         document.body.innerHTML=`<audio id="audio-player" autoplay><source src="http://localhost:3000/api/playsong?v=${videoid}"></audio>`;
@@ -26,6 +35,7 @@ async function audio(videoid,time){
                 return;
             }
             socket.emit("play song",videoid,audioplayer.currentTime);
+            brodcaststate();
         });
         audioplayer.addEventListener("pause",()=>{
             if(isplay){
@@ -33,6 +43,7 @@ async function audio(videoid,time){
                 return;
             }
             socket.emit("pause song",videoid,audioplayer.currentTime);
+            brodcaststate();
         });
         audioplayer.addEventListener("seeking",()=>{
             if(isplay){
@@ -40,7 +51,9 @@ async function audio(videoid,time){
                 return;
             }
             socket.emit("play song",videoid,audioplayer.currentTime);
+            brodcaststate();
         });
+        audioplayer.addEventListener("timeupdate",brodcaststate);
     }else{
         isplay=true;
         audioplayer.currentTime=time;
@@ -49,7 +62,7 @@ async function audio(videoid,time){
         }
     }
 }
-chrome.runtime.onMessage.addListener((msg)=>{
+chrome.runtime.onMessage.addListener((msg,sender,sendResponse)=>{
     if(msg.target!=="offscreen"){
         return;
     }
@@ -59,5 +72,25 @@ chrome.runtime.onMessage.addListener((msg)=>{
     if(msg.type==="PLAY_SONG"){ 
         isplay=false;
         audio(msg.videoId,0);
+    }
+    if(msg.type==="TOGGLE_PLAY"){
+        if(audioplayer){
+            audioplayer.paused?audioplayer.play():audioplayer.pause();
+        }
+    }
+    if(msg.type==="SEEK"){
+        if(audioplayer&&!isNaN(msg.time)){
+            audioplayer.currentTime=msg.time;
+        }
+    }
+    if(msg.type==="GET_STATE"){
+        sendResponse({
+            videoId: currsong,
+            paused: audioplayer ? audioplayer.paused : true,
+            currentTime:audioplayer?audioplayer.currentTime:0,
+            duration:audioplayer && audioplayer.duration ? audioplayer.duration:0
+
+            
+        })
     }
 });

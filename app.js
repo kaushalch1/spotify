@@ -13,6 +13,7 @@ let server=http.createServer(app);
 const io=new Server(server);
 const rootDir=__dirname;
 const distDir=path.join(rootDir,"dist");
+const audioUrlCache=new Map();
 if (fs.existsSync(distDir)) {
     app.use(express.static(distDir));
 }
@@ -102,16 +103,22 @@ app.get('/api/playsong',async(req,res)=>{
         return res.status(400).json({ error: 'A video id is required' });
     }
     try{
-        const videourl= `https://www.youtube.com/watch?v=${videoId}`;
-        const info =await youtubedl(videourl, {
-            dumpSingleJson: true,
-            noWarnings: true,
-            format: 'bestaudio'
-        });
-        const audiourl=info.url;
+        let audiourl=audioUrlCache.get(videoId);
         if(!audiourl){
-            return res.status(404).json({ error: 'No audio stream found for this video'});
+            const videourl= `https://www.youtube.com/watch?v=${videoId}`;
+            const info =await youtubedl(videourl, {
+                dumpSingleJson: true,
+                noWarnings: true,
+                noPlaylist: true,
+                format: 'bestaudio'
+            });
+            audiourl=info.url;
+            if(audiourl){
+                audioUrlCache.set(videoId,audiourl);
+            }
         }
+        
+
         const audiores =await fetch(audiourl, {
             headers: req.headers.range?{Range: req.headers.range}:{}
         });
