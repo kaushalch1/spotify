@@ -1,16 +1,16 @@
 # Spokify
 
-Spokify is a Chrome extension for searching YouTube music and playing audio from a small extension popup. It uses a local Node.js server for YouTube search, audio extraction, and Socket.IO room synchronization.
+Spokify is a Chrome extension that enables users to search YouTube music and play audio from a browser popup. It uses a Node.js backend for YouTube search, audio extraction, and Socket.IO-based room synchronization.
 
 ## Current limitation
 
-The room feature is currently unavailable. Shared playback depends on server-side audio extraction with `yt-dlp`, and YouTube may block requests from the server with a bot-check message such as:
+The room and synchronized playback features are currently unavailable. Shared playback depends on server-side audio extraction with `yt-dlp`, and YouTube may block requests from the server with a bot-check message such as:
 
 ```text
 Sign in to confirm you're not a bot
 ```
 
-Updating `yt-dlp` does not reliably solve this problem. Do not upload browser cookies to the server. Search can still work, but playback and synchronized rooms may fail when YouTube blocks the server.
+Updating `yt-dlp` does not reliably resolve this issue. Browser cookies must not be uploaded to the server. Search may continue to function, but audio playback and synchronized rooms may fail when YouTube blocks the server.
 
 ## Features
 
@@ -20,7 +20,7 @@ Updating `yt-dlp` does not reliably solve this problem. Do not upload browser co
 - Play and pause audio from the extension popup.
 - Seek through the current audio track.
 - Cache extracted audio URLs while the server is running.
-- Socket.IO support for shared rooms and playback synchronization.
+- Socket.IO infrastructure for shared rooms and playback synchronization; this feature is currently unavailable because of YouTube restrictions.
 - Chrome Manifest V3 background and offscreen audio support.
 - Optional deployment to another machine or server by changing the backend URL.
 
@@ -31,6 +31,49 @@ Updating `yt-dlp` does not reliably solve this problem. Do not upload browser co
 - npm
 - Google Cloud YouTube Data API v3 key
 - Google Chrome or another Chromium browser
+
+## quick start
+
+
+1. Install Node.js 18 or later from [nodejs.org](https://nodejs.org/).
+2. Download or clone this repository.
+3. Open PowerShell or another terminal in the project directory.
+4. Install the dependencies:
+
+	```powershell
+	npm install
+	```
+
+5. Create a YouTube Data API v3 key in Google Cloud and enable **YouTube Data API v3** for the relevant project.
+6. Create a file named `.env` in the project folder with:
+
+	```env
+	apiKey=THE_REVIEWER_API_KEY
+	PORT=3000
+	```
+
+7. Start the backend:
+
+	```powershell
+	node app.js
+	```
+
+	A successful startup displays `Server is running on PORT:3000`.
+
+8. Verify the backend by opening this URL in a browser:
+
+	```text
+	http://localhost:3000/api/song?q=music
+	```
+
+	A JSON response containing YouTube results confirms that the backend is operating correctly.
+
+9. Open Chrome and visit `chrome://extensions`.
+10. Enable **Developer mode**, click **Load unpacked**, and select the project folder.
+11. Open Spokify, search for a song, and select a result.
+
+The `node app.js` process must remain running during testing. The API key must not be added to extension files, committed to Git, or shared with other users.
+
 
 ## Project structure
 
@@ -115,19 +158,6 @@ http://localhost:3000
 
 The extension and the Node server must run on the same computer for this configuration to work.
 
-## Share with a friend
-
-The local configuration is only for your computer. Your friend cannot access your `localhost`.
-
-To share the extension, deploy the Node server to a reachable HTTPS host, then replace `http://localhost:3000` in these files:
-
-- `index.js`
-- `offscreen.js`
-- `manifest.json`
-
-Update both `host_permissions` and `content_security_policy.connect-src` in `manifest.json`. Reload the extension after changing the URL.
-
-Do not share `.env`, `node_modules`, or your API key.
 
 ## API endpoints
 
@@ -163,20 +193,11 @@ Restart the server after changing `.env`.
 
 ### `Sign in to confirm you're not a bot`
 
-YouTube is blocking `yt-dlp`. This is a hosting/YouTube limitation, not an extension syntax error. Search may work while audio playback and rooms remain unavailable.
+YouTube is blocking `yt-dlp`. This is a hosting and YouTube restriction, not an extension syntax error. Search may continue to work while audio playback and room synchronization remain unavailable.
 
 ### `Receiving end does not exist`
 
 Reload the extension from `chrome://extensions`, close the popup, and open it again. This usually means the extension's offscreen document was not ready.
 
-## Security notes
 
-- Keep `.env` private.
-- Never commit API keys to GitHub.
-- Rotate an API key immediately if it is exposed.
-- Do not upload browser cookies to a remote server.
-- Restrict the YouTube API key by API and application where possible.
-
-## License
-
-This project currently uses the license field declared in `package.json`.
+This project uses the license specified in `package.json`.
