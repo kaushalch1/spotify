@@ -10,7 +10,9 @@ const youtubedl = require('youtube-dl-exec');
 let app=express();
 app.use(cors());
 let server=http.createServer(app);
-const io=new Server(server);
+const io=new Server(server, {
+    cors: { origin: "*" }
+});
 const rootDir=__dirname;
 const distDir=path.join(rootDir,"dist");
 const audioUrlCache=new Map();

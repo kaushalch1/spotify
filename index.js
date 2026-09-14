@@ -1,4 +1,3 @@
-//const socket = io("http://localhost:3000");
 const searchsong = document.getElementById("search");
 //const results = document.getElementById("results");
 const joinbtn = document.getElementById("join");
