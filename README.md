@@ -1,3 +1,6 @@
+
+
+
 # Spokify
 
 Spokify is a Chrome extension that enables users to search YouTube music and play audio from a browser popup. It uses a Node.js backend for YouTube search, audio extraction, and Socket.IO-based room synchronization.
@@ -31,6 +34,11 @@ Updating `yt-dlp` does not reliably resolve this issue. Browser cookies must not
 - npm
 - Google Cloud YouTube Data API v3 key
 - Google Chrome or another Chromium browser
+
+
+# Demo video:
+
+https://github.com/user-attachments/assets/d963f051-a2d0-4e25-b7b4-affb894f2ab5
 
 ## quick start
 
